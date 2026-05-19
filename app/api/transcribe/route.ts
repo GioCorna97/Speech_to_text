@@ -21,6 +21,7 @@ const acceptedExtensions = /\.(aac|flac|m4a|mp3|mp4|mpeg|mpga|oga|ogg|wav|webm)$
 const maxFileSize = 25 * 1024 * 1024;
 
 export async function POST(request: Request) {
+  console.log("OPENAI_API_KEY exists:", Boolean(process.env.OPENAI_API_KEY));
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: "Manca OPENAI_API_KEY nelle variabili ambiente." },
