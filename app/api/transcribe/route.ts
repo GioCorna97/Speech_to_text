@@ -19,6 +19,29 @@ const acceptedTypes = new Set([
 
 const acceptedExtensions = /\.(aac|flac|m4a|mp3|mp4|mpeg|mpga|oga|ogg|wav|webm)$/i;
 const maxFileSize = 25 * 1024 * 1024;
+const defaultTranscriptionModel = "gpt-4o-mini-transcribe";
+const acceptedTranscriptionModels = new Set([
+  "gpt-4o-mini-transcribe",
+  "gpt-4o-transcribe",
+  "whisper-1",
+]);
+
+function getTranscriptionModel() {
+  const configuredModel = process.env.OPENAI_TRANSCRIPTION_MODEL?.trim();
+
+  if (!configuredModel) {
+    return defaultTranscriptionModel;
+  }
+
+  if (!acceptedTranscriptionModels.has(configuredModel)) {
+    console.warn(
+      `Ignoring unsupported OPENAI_TRANSCRIPTION_MODEL "${configuredModel}". Falling back to ${defaultTranscriptionModel}.`,
+    );
+    return defaultTranscriptionModel;
+  }
+
+  return configuredModel;
+}
 
 export async function POST(request: Request) {
   console.log("OPENAI_API_KEY exists:", Boolean(process.env.OPENAI_API_KEY));
@@ -55,7 +78,8 @@ export async function POST(request: Request) {
   }
 
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const model = process.env.OPENAI_TRANSCRIPTION_MODEL ?? "gpt-4o-mini-transcribe";
+  const model = getTranscriptionModel();
+  console.log("Transcription model:", model);
 
   try {
     const transcription = await client.audio.transcriptions.create({
