@@ -19,10 +19,8 @@ const acceptedTypes = new Set([
 
 const acceptedExtensions = /\.(aac|flac|m4a|mp3|mp4|mpeg|mpga|oga|ogg|wav|webm)$/i;
 const maxFileSize = 25 * 1024 * 1024;
-const defaultTranscriptionModel = "gpt-4o-mini-transcribe";
+const defaultTranscriptionModel = "whisper-1";
 const acceptedTranscriptionModels = new Set([
-  "gpt-4o-mini-transcribe",
-  "gpt-4o-transcribe",
   "whisper-1",
 ]);
 
